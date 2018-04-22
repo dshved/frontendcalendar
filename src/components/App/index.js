@@ -31,6 +31,8 @@ class App extends Component {
     type: '',
     selectedOption: '',
     loading: true,
+    selectedCountry: [],
+    selectedCity: [],
   }
 
   constructor(props) {
@@ -42,39 +44,75 @@ class App extends Component {
 
   componentDidMount = async () => {
     const {storage} = this.props
-    const selectedCountry = storage.getSelectedCountry()
-    const selectedCity = storage.getSelectedCity()
+    let selectedCountry = storage.getSelectedCountry()
+    let selectedCity = storage.getSelectedCity()
+    try {
+      selectedCountry = JSON.parse(selectedCountry)
+      selectedCity = JSON.parse(selectedCity)
+    } catch (err) {
+      selectedCountry = []
+      this.props.storage.setItem('selectedCountry', JSON.stringify(selectedCountry))
+
+      selectedCity = []
+      this.props.storage.setItem('selectedCity', JSON.stringify(selectedCity))
+    }
+
+    if (typeof selectedCountry !== 'object') this.props.storage.setItem('selectedCountry', '[]')
+    if (typeof selectedCity !== 'object') this.props.storage.setItem('selectedCity', '[]')
+
     const {entries, countries} = await getEvents()
     this.setState({
       loading: false,
       entries,
       countries,
       selectedCountry,
-      selectedCity: selectedCountry ? selectedCity : '',
+      selectedCity,
     })
   }
 
   createSelectHandler(stateProperty) {
     return selectedOption => {
-      const value = selectedOption ? selectedOption.value : ''
+      const value = selectedOption ? selectedOption : ''
       this.setState(
         {
           [stateProperty]: value,
         },
         () => {
-          this.props.storage.setItem(stateProperty, value)
+          this.props.storage.setItem(stateProperty, JSON.stringify(value))
+          if (stateProperty === 'selectedCountry') {
+            this.removeCity(value)
+          }
         },
       )
     }
+  }
+  removeCity = value => {
+    const {countries, selectedCity} = this.state
+    const list = []
+    const cities = []
+    value.map(item => {
+      const s = countries.find(({name}) => name === item.value)
+      return list.push(s)
+    })
+    list.map(item => {
+      return item.cities.map(item => {
+        return cities.push({value: item, label: item})
+      })
+    })
+    const newSelectedCity = []
+    cities.map(item => {
+      const s = selectedCity.find(({value}) => value === item.value)
+      if (s) newSelectedCity.push(s)
+      return false
+    })
+    this.setState({selectedCity: newSelectedCity})
+    this.props.storage.setItem('selectedCity', JSON.stringify(newSelectedCity))
   }
 
   createCountrySelectHandler() {
     const generalPropHandler = this.createSelectHandler('selectedCountry')
     return selectedOption => {
       generalPropHandler(selectedOption)
-      this.setState({
-        selectedCity: '',
-      })
     }
   }
   renderFooter = () => {
@@ -89,12 +127,36 @@ class App extends Component {
       countriesList.push({value: value.name, label: value.name})
     })
     let cities = []
-    if (selectedCountry) {
-      const country = countries.find(({name}) => name === selectedCountry)
-      cities = country.cities.map(city => {
-        return {value: city, label: city}
+    const list = []
+
+    let selectedCountries = selectedCountry
+    let selectedCities = selectedCity
+
+    if (selectedCountry.length) {
+      selectedCountry.map(item => {
+        const country = countries.find(({name}) => name === item.value)
+        if (country) list.push(country)
+        return false
       })
+
+      if (list.length) {
+        list.map(item => {
+          return item.cities.map(item => {
+            return cities.push({value: item, label: item})
+          })
+        })
+        let checkCity = []
+        cities.map(item => {
+          const city = selectedCity.find(({value}) => value === item.value)
+          if (city) checkCity.push(city)
+          return false
+        })
+        if (!checkCity.length) selectedCities = []
+      } else {
+        selectedCountries = []
+      }
     }
+
     let citySelect = (
       <StyledSelect
         clearValueText="Очистить"
@@ -102,7 +164,8 @@ class App extends Component {
         noResultsText="Ничего не найдено"
         name="form-field-city-name"
         options={cities}
-        value={selectedCity}
+        multi
+        value={selectedCities}
         onChange={this.handleCitySelect}
       />
     )
@@ -116,12 +179,13 @@ class App extends Component {
             noResultsText="Ничего не найдено"
             name="form-field-country-name"
             options={countriesList}
-            value={selectedCountry}
+            multi
+            value={selectedCountries}
             onChange={this.handleCountrySelect}
           />
-          {selectedCountry ? citySelect : ''}
+          {selectedCountries.length ? citySelect : ''}
         </Search>
-        {loading ? <Preloader /> : <Events country={selectedCountry} city={selectedCity} entries={entries} />}
+        {loading ? <Preloader /> : <Events country={selectedCountries} city={selectedCities} entries={entries} />}
         {this.renderFooter()}
       </Container>
     )
