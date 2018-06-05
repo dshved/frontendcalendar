@@ -41,10 +41,10 @@
     "*.{js,jsx}": ["format", "eslint", "git add"]
   },
   "bugs": {
-    "url": "https://github.com/web-standards-ru/calendar-app/issues"
+    "url": "https://github.com/dshved/frontendcalendar/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/web-standards-ru/calendar-app.git"
+    "url": "https://github.com/dshved/frontendcalendar.git"
   }
 }

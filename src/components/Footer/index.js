@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Footer = styled.div`
   text-align: center;
   a {
-    color: #e15345;
+    color: #363636;
     &:hover {
       text-decoration: none;
     }

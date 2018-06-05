@@ -114,7 +114,7 @@ class Events extends Component {
         {events.map((el, key) => (
           <Item key={key}>
             <ItemInner>
-              <Name target="_blank" href={el.link}>
+              <Name target="_blank" rel="noopener" href={el.link}>
                 {el.name}
               </Name>
               <Row>
@@ -142,7 +142,7 @@ class Events extends Component {
                 ''
               )}
 
-              <Link target="_blank" href={el.link}>
+              <Link target="_blank" title={el.name} rel="noopener" href={el.link}>
                 <LinkIcon />
               </Link>
             </ItemInner>
