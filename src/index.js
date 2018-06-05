@@ -30,6 +30,9 @@ injectGlobal`
     background-color: rgb(251, 228, 227);
     color: #c73c2f;
   }
+  .Select-placeholder, .Select--single > .Select-control .Select-value {
+    color: #595959;
+  }
 `
 
 ReactDOM.render(<App storage={new Storage()} />, document.getElementById('root'))
