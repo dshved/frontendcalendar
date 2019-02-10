@@ -1,8 +1,12 @@
 /* eslint max-len: off */
-import React from 'react'
+import * as React from 'react'
 import Svg from '../Svg'
 
-const CalendarIcon = ({className}) => (
+interface CalendarIconProps {
+  className?: string
+}
+
+const CalendarIcon: React.SFC<CalendarIconProps> = ({className}) => (
   <Svg width="16" height="16" className={className}>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g transform="translate(-16.000000, -73.000000)" fill="#8B8B8B" fillRule="nonzero">

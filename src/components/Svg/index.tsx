@@ -1,6 +1,13 @@
-import React from 'react'
+import * as React from 'react'
 
-const Svg = ({children, width, height, className}) => (
+interface SvgType {
+  children: React.ReactChild
+  width: string
+  height: string
+  className?: string
+}
+
+const Svg = ({children, width, height, className}: SvgType) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={width}

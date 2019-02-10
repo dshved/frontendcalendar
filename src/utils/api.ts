@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const sortStrings = (a, b) => {
+export const sortStrings = (a: string, b: string): number => {
   const upperA = a.toUpperCase()
   const upperB = b.toUpperCase()
   if (upperA < upperB) {
@@ -13,9 +13,9 @@ export const sortStrings = (a, b) => {
 }
 
 class Countries {
-  countries = {}
+  countries: {[propName: string]: any} = {}
 
-  addLocation({city, country}) {
+  addLocation({city, country}: {city: string; country: string}) {
     const countryEntry = this.countries[country] || {cities: new Set()}
     countryEntry.cities.add(city)
     this.countries[country] = countryEntry
@@ -35,12 +35,19 @@ class Countries {
   }
 }
 
+interface Event {
+  name: string
+  city: string
+  date: string
+  time: string
+  link: string
+}
 export const getEvents = async () => {
   const response = await axios.get('https://frontendcalendar.tk/events')
   const {data} = response
-  const entries = []
+  const entries: any[] = []
   const countries = new Countries()
-  data.forEach(el => {
+  data.forEach((el: Event) => {
     const {name, city, date, time, link} = el
     const dateStart = date.split('-')[0]
     const d = dateStart.split('.')
