@@ -43,8 +43,7 @@ interface Event {
   link: string
 }
 export const getEvents = async () => {
-  // const response = await axios.get('https://frontendcalendar.tk/events')
-  const response = await axios.get('http://localhost:3001/events')
+  const response = await axios.get('https://frontendcalendar.tk/events')
   const {data} = response
   const entries: any[] = []
   const countries = new Countries()
