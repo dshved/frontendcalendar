@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import * as React from 'react'
 import {CalendarIcon, ClockIcon, LinkIcon, PlaceholderIcon} from '../Icons'
 import styled from 'styled-components'
 import {getHumanDate, sortDate} from '../../utils/date'
@@ -60,20 +60,22 @@ const Link = styled.a`
   top: 50%;
   transform: translateY(-50%);
 `
-class Events extends Component {
+class Events extends React.Component<any, any> {
   state = {
     events: [],
   }
-
-  componentDidMount = props => {
-    this.updateEvents(props)
+  constructor(props: any) {
+    super(props)
+  }
+  componentDidMount() {
+    this.updateEvents(this.props)
   }
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = (nextProps: any) => {
     this.updateEvents(nextProps)
   }
 
-  updateEvents = props => {
+  updateEvents = (props: any) => {
     const {entries, country, city} = props || this.props
     let list = this.filterEvents(entries, country, 'country')
     if (city.length && country.length) {
@@ -85,22 +87,22 @@ class Events extends Component {
     })
   }
 
-  filterEvents = (arr, selected = [], type = 'city') => {
+  filterEvents = (arr: any, selected = [], type = 'city') => {
     if (!selected.length) return arr
-    let list = []
-    selected.map(({value}) => {
-      const find = arr.filter(item => {
-        if (type) {
+    let list: any = []
+    selected.map(({value}: {value?: string}) => {
+      const find = arr.filter((item: any) => {
+        if (type && value) {
           return item.location[type].toLowerCase().search(value.toLowerCase()) !== -1
         }
         return item
       })
-      return find.map(item => {
+      return find.map((item: any) => {
         return list.push(item)
       })
     })
 
-    list.sort((eventA, eventB) => {
+    list.sort((eventA: any, eventB: any) => {
       return sortDate(eventA, eventB)
     })
 
@@ -111,7 +113,7 @@ class Events extends Component {
     const {events} = this.state
     return (
       <List>
-        {events.map((el, key) => (
+        {events.map((el: any, key: any) => (
           <Item key={key}>
             <ItemInner>
               <Name target="_blank" rel="noopener" href={el.link}>

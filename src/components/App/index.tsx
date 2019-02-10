@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import * as React from 'react'
 import Select from 'react-select'
 import 'react-select/dist/react-select.css'
 import styled from 'styled-components'
@@ -19,11 +19,17 @@ const Header = styled.h1`
 const Search = styled.div`
   margin-bottom: 15px;
 `
-const StyledSelect = styled(Select)`
+interface StyledSelectProps {
+  clearValueText: string
+  noResultsText: string
+  multi: boolean
+}
+
+const StyledSelect = styled<StyledSelectProps, any>(Select)`
   margin-bottom: 10px;
 `
 
-class App extends Component {
+class App extends React.Component<any, any> {
   state = {
     entries: [],
     countries: [],
@@ -34,8 +40,10 @@ class App extends Component {
     selectedCountry: [],
     selectedCity: [],
   }
+  handleCountrySelect: any
+  handleCitySelect: any
 
-  constructor(props) {
+  constructor(props: any) {
     super(props)
 
     this.handleCountrySelect = this.createCountrySelectHandler()
@@ -70,8 +78,8 @@ class App extends Component {
     })
   }
 
-  createSelectHandler(stateProperty) {
-    return selectedOption => {
+  createSelectHandler(stateProperty: any) {
+    return (selectedOption: any) => {
       const value = selectedOption ? selectedOption : ''
       this.setState(
         {
@@ -86,21 +94,21 @@ class App extends Component {
       )
     }
   }
-  removeCity = value => {
+  removeCity = (value: any) => {
     const {countries, selectedCity} = this.state
-    const list = []
-    const cities = []
-    value.map(item => {
+    const list: any = []
+    const cities: any = []
+    value.map((item: any) => {
       const s = countries.find(({name}) => name === item.value)
       return list.push(s)
     })
-    list.map(item => {
-      return item.cities.map(item => {
+    list.map((item: any) => {
+      return item.cities.map((item: any) => {
         return cities.push({value: item, label: item})
       })
     })
-    const newSelectedCity = []
-    cities.map(item => {
+    const newSelectedCity: any = []
+    cities.map((item: any) => {
       const s = selectedCity.find(({value}) => value === item.value)
       if (s) newSelectedCity.push(s)
       return false
@@ -111,7 +119,7 @@ class App extends Component {
 
   createCountrySelectHandler() {
     const generalPropHandler = this.createSelectHandler('selectedCountry')
-    return selectedOption => {
+    return (selectedOption: any) => {
       generalPropHandler(selectedOption)
     }
   }
@@ -122,31 +130,31 @@ class App extends Component {
   }
   render() {
     const {countries, selectedCountry, selectedCity, loading, entries} = this.state
-    const countriesList = []
-    countries.forEach(value => {
+    const countriesList: any = []
+    countries.forEach((value: any) => {
       countriesList.push({value: value.name, label: value.name})
     })
-    let cities = []
-    const list = []
+    let cities: any = []
+    const list: any = []
 
     let selectedCountries = selectedCountry
     let selectedCities = selectedCity
 
     if (selectedCountry.length) {
-      selectedCountry.map(item => {
+      selectedCountry.map((item: any) => {
         const country = countries.find(({name}) => name === item.value)
         if (country) list.push(country)
         return false
       })
 
       if (list.length) {
-        list.map(item => {
-          return item.cities.map(item => {
+        list.map((item: any) => {
+          return item.cities.map((item: any) => {
             return cities.push({value: item, label: item})
           })
         })
         let checkCity = []
-        cities.map(item => {
+        cities.map((item: any) => {
           const city = selectedCity.find(({value}) => value === item.value)
           if (city) checkCity.push(city)
           return false

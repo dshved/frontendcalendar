@@ -2,7 +2,11 @@
 import React from 'react'
 import Svg from '../Svg'
 
-const PlaceholderIcon = ({className}) => (
+interface PlaceholderIconProps {
+  className?: string
+}
+
+const PlaceholderIcon: React.SFC<PlaceholderIconProps> = ({className}) => (
   <Svg width="16" height="21" className={className}>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g transform="translate(-16.000000, -43.000000)" fill="#8B8B8B" fillRule="nonzero">

@@ -1,8 +1,11 @@
 /* eslint max-len: off */
-import React from 'react'
+import * as React from 'react'
 import Svg from '../Svg'
 
-const LinkIcon = ({className}) => (
+interface LinkIconProps {
+  className?: string
+}
+const LinkIcon: React.SFC<LinkIconProps> = ({className}) => (
   <Svg width="32" height="32" className={className}>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g transform="translate(-288.000000, -47.000000)" fill="#E15345" fillRule="nonzero">

@@ -1,8 +1,12 @@
 /* eslint max-len: off */
-import React from 'react'
+import * as React from 'react'
 import Svg from '../Svg'
 
-const ClockIcon = ({className}) => (
+interface ClockIconProps {
+  className?: string
+}
+
+const ClockIcon: React.SFC<ClockIconProps> = ({className}) => (
   <Svg width="16" height="16" className={className}>
     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g transform="translate(-16.000000, -100.000000)" fill="#8B8B8B" fillRule="nonzero">

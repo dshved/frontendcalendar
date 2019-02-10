@@ -7,19 +7,19 @@ class Storage {
     return this.getItem('selectedCity') || ''
   }
 
-  setSelectedCountry(country) {
+  setSelectedCountry(country: string) {
     return this.setItem('selectedCoutry', country)
   }
 
-  setSelectedCity(city) {
+  setSelectedCity(city: string) {
     return this.setItem('selectedCity', city)
   }
 
-  setItem(key, value) {
+  setItem(key: string, value: string) {
     return localStorage.setItem(key, value)
   }
 
-  getItem(key) {
+  getItem(key: string) {
     return localStorage.getItem(key)
   }
 }
