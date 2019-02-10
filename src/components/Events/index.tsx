@@ -1,7 +1,8 @@
-import * as React from 'react'
+import React, {useState, useEffect} from 'react'
 import {CalendarIcon, ClockIcon, LinkIcon, PlaceholderIcon} from '../Icons'
 import styled from 'styled-components'
 import {getHumanDate, sortDate} from '../../utils/date'
+import {SortDate} from '../../utils/date'
 
 const List = styled.ul`
   margin: 0;
@@ -60,7 +61,110 @@ const Link = styled.a`
   top: 50%;
   transform: translateY(-50%);
 `
-class Events extends React.Component<any, any> {
+
+type Range = {
+  start: string
+  end: string
+}
+
+interface Entries {
+  name: string
+  location: {
+    city: string
+    country: string
+  }
+  date: Range
+  time?: Range
+}
+
+interface Select {
+  value: string
+  lavel: string
+}
+
+type Props = {
+  country: Select[]
+  city: Select[]
+  entries: Entries[]
+}
+function Events(props: Props) {
+  const [events, setEvents] = useState([])
+
+  useEffect(() => {
+    const {entries, country, city} = props
+    let list = filterEvents(entries, country, 'country')
+    if (city.length && country.length) {
+      list = filterEvents(list, city, 'city')
+    }
+
+    setEvents(list)
+  })
+
+  function filterEvents(arr: Entries[], selected: Select[] = [], type: string = 'city') {
+    if (!selected.length) return arr
+    let list: any = []
+    selected.map(({value}) => {
+      const find = arr.filter((item: any) => {
+        if (type && value) {
+          return item.location[type].toLowerCase().search(value.toLowerCase()) !== -1
+        }
+        return item
+      })
+      return find.map((item: any) => {
+        return list.push(item)
+      })
+    })
+
+    list.sort((eventA: SortDate, eventB: SortDate) => {
+      return sortDate(eventA, eventB)
+    })
+
+    return list
+  }
+
+  return (
+    <List>
+      {events.map((el: any, key: any) => (
+        <Item key={key}>
+          <ItemInner>
+            <Name target="_blank" rel="noopener" href={el.link}>
+              {el.name}
+            </Name>
+            <Row>
+              <PlaceholderIcon />
+              <span>
+                {el.location.city}, {el.location.country}
+              </span>
+            </Row>
+            <Row>
+              <CalendarIcon />
+              <span>
+                {getHumanDate(el.date.start)}
+                {el.date.end ? ` — ${getHumanDate(el.date.end)}` : ''}
+              </span>
+            </Row>
+            {el.time.start ? (
+              <Row>
+                <ClockIcon />
+                <span>
+                  {el.time.start}
+                  {el.time.end ? ` — ${el.time.end}` : ''}
+                </span>
+              </Row>
+            ) : (
+              ''
+            )}
+
+            <Link target="_blank" title={el.name} rel="noopener" href={el.link}>
+              <LinkIcon />
+            </Link>
+          </ItemInner>
+        </Item>
+      ))}
+    </List>
+  )
+}
+class Events1 extends React.Component<any, any> {
   state = {
     events: [],
   }

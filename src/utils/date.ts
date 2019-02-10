@@ -8,7 +8,7 @@ export const getHumanDate = (dateText: string) => {
     .format('DD MMM YYYY')
     .replace(/ /g, '\u00A0')
 }
-interface SortDate {
+export interface SortDate {
   date: {start: string}
 }
 export const sortDate = (x: SortDate, y: SortDate) => {
